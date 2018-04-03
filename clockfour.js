@@ -159,7 +159,7 @@ function imageClick(e) {
       weatherAllWorldF = (wheatherAllWorld * 1.8)+32;
       document.querySelector(".tempF-AllWorld").innerHTML = `${Math.round(weatherAllWorldF)}`;
       wheatherIconWorld = data.weather[0].icon;
-      document.querySelector(".icon-AllWorld").innerHTML = `<img class="icon-Img-Tokyo" src="../content/${wheatherIconWorld}.png" width="70px" height="70px">`;
+      document.querySelector(".icon-AllWorld").innerHTML = `<img class="icon-Img-Tokyo" src="./content/${wheatherIconWorld}.png" width="70px" height="70px">`;
       document.querySelector(".day-AllWorld").innerHTML = `${day}`;
     })
     .then(function() {
@@ -240,10 +240,10 @@ function setDateWorld() {
   secondHandWorld.style.transform = `rotate(${secondsDegreesWorld}deg)`;
   const minsWorld = nowWorld.getMinutes();
   const minsDegreesWorld = ((minsWorld / 60) * 360) + ((secondsWorld / 60)*6) + 90;
-  minsHandTokio.style.transform = `rotate(${minsDegreesWorld}deg)`;
+  minsHandWorld.style.transform = `rotate(${minsDegreesWorld}deg)`;
   const hourWorld = nowWorld.getHours();
   const offsetHoursWorld = (offsetWorld / 3600);
-  const guadalajaraOffsetHours = (guadalajaraOffset / 3600);
+  const guadalajaraOffsetHours = (offsetWorld / 3600);
   const hourDegreesWorld = (((hourWorld + offsetHoursWorld + guadalajaraOffsetHours) / 12) * 360) + ((minsWorld/60)*30) + 90;
   hourHandWorld.style.transform = `rotate(${hourDegreesWorld}deg)`;
 }
@@ -304,7 +304,7 @@ function zoom (e) {
         weatherAllWorldF = (wheatherAllWorld * 1.8)+32;
         document.querySelector(".tempF-AllWorld").innerHTML = `${Math.round(weatherAllWorldF)}`;
         wheatherIconWorld = data.weather[0].icon;
-        document.querySelector(".icon-AllWorld").innerHTML = `<img class="icon-Img-Tokyo" src="../content/${wheatherIconWorld}.png" width="70px" height="70px">`;
+        document.querySelector(".icon-AllWorld").innerHTML = `<img class="icon-Img-Tokyo" src="./content/${wheatherIconWorld}.png" width="70px" height="70px">`;
       })
       .then(function() {
         fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLatZoom},${imageLonZoom}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)

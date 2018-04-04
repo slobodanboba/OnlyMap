@@ -31,6 +31,7 @@ let imageLonZoom = 0;
 let maxColumn = 0;
 let maxRow = 0;
 let day = '';
+let curentDay = 0;
 let image = document.querySelector(".world-map");
 let images = document.querySelectorAll('.img');
 let zoomedpic = document.querySelector('.zoomed');
@@ -41,6 +42,18 @@ let guadalajaraHours = 0;
 let curentHourWorld = 0;
 let imageLatRound = 0;
 let imageLonRound = 0;
+
+function DisplayCurrentTime() {
+        let date = new Date();
+        let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        let am_pm = date.getHours() >= 12 ? "PM" : "AM";
+        hours = hours < 10 ? "0" + hours : hours;
+        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
+        let lblTime = document.getElementById("lblTime");
+        lblTime.innerHTML = time;
+    };
 
 
 function getWidthHeight() {
@@ -110,91 +123,50 @@ function displayLonLat1000px(e) {
       offsetWorld = world.rawOffset;
     })
     .then(function(){
-      const timeWorld = new Date().getHours()
+      const timeGuadalajara = new Date().getHours()
       const dayNow = new Date().getDay()
       const offsetHours = (offsetWorld/3600);
       console.log("timeWorld",timeWorld , offsetHours);
       if ((offsetHours + timeWorld) > 23) {
-        switch (dayNow + 1) {
-          case 0:
-          day = "Sunday";
-          break;
-          case 1:
-          day = "Monday";
-          break;
-          case 2:
-          day = "Tuesday";
-          break;
-          case 3:
-          day = "Wednesday";
-          break;
-          case 4:
-          day = "Thursday";
-          break;
-          case 5:
-          day = "Friday";
-          break;
-          case 6:
-          day = "Saturday";
-        }
-      }
-      else if ((offsetHours + timeWorld) < 1) {
-        switch (dayNow - 1) {
-          case 0:
-          day = "Sunday";
-          break;
-          case 1:
-          day = "Monday";
-          break;
-          case 2:
-          day = "Tuesday";
-          break;
-          case 3:
-          day = "Wednesday";
-          break;
-          case 4:
-          day = "Thursday";
-          break;
-          case 5:
-          day = "Friday";
-          break;
-          case 6:
-          day = "Saturday";
-        }
-      }
-      else {
-        switch (dayNow) {
-          case 0:
-          day = "Sunday";
-          break;
-          case 1:
-          day = "Monday";
-          break;
-          case 2:
-          day = "Tuesday";
-          break;
-          case 3:
-          day = "Wednesday";
-          break;
-          case 4:
-          day = "Thursday";
-          break;
-          case 5:
-          day = "Friday";
-          break;
-          case 6:
-          day = "Saturday";
-        }
-      }
-  })
+         curentDay = dayNow + 1
+       } else if ((offsetHours + timeWorld) < 1) {
+         curentDay = dayNow - 1
+       } else {
+         curentDay = dayNow
+       }
+
+       console.log("curentDay",curentDay);
+       switch (curentDay) {
+         case 0:
+         day = "Sunday";
+         break;
+         case 1:
+         day = "Monday";
+         break;
+         case 2:
+         day = "Tuesday";
+         break;
+         case 3:
+         day = "Wednesday";
+         break;
+         case 4:
+         day = "Thursday";
+         break;
+         case 5:
+         day = "Friday";
+         break;
+         case 6:
+         day = "Saturday";
+       }
+    })
     .then(function(){
     document.querySelector('.movingDivmax1000').style.display = "block";
     positionY = e.pageY - imageOffsetTop;
     positionX = e.pageX - imageOffsetLeft;
     imageLat = (50 - positionY/heightDevider) * 1.8;
     imageLon = (positionX/widthDevider - 50) * 3.6;
-    document.querySelector('.spanLat1000').innerHTML = Math.round(imageLat);
-    document.querySelector('.spanLon1000').innerHTML = Math.round(imageLon);
+    document.querySelector('.spanLat1000').innerHTML = imageLat.toFixed(2);
+    document.querySelector('.spanLon1000').innerHTML = imageLon.toFixed(2);
     document.querySelector('.cornerTemp1000').innerHTML = Math.round(wheatherAllWorld) + "C";
     document.querySelector('.cornerTempF1000').innerHTML = Math.round(weatherAllWorldF) + "F";
     document.querySelector('.cornerDay1000').innerHTML = day;
@@ -245,85 +217,44 @@ function getTimeWorld(){
     const offsetHours = (offsetWorld/3600);
     console.log("timeWorld",timeWorld , offsetHours);
     if ((offsetHours + timeWorld) > 23) {
-      switch (dayNow + 1) {
-        case 0:
-        day = "Sunday";
-        break;
-        case 1:
-        day = "Monday";
-        break;
-        case 2:
-        day = "Tuesday";
-        break;
-        case 3:
-        day = "Wednesday";
-        break;
-        case 4:
-        day = "Thursday";
-        break;
-        case 5:
-        day = "Friday";
-        break;
-        case 6:
-        day = "Saturday";
-      }
-    }
-    else if ((offsetHours + timeWorld) < 1) {
-      switch (dayNow - 1) {
-        case 0:
-        day = "Sunday";
-        break;
-        case 1:
-        day = "Monday";
-        break;
-        case 2:
-        day = "Tuesday";
-        break;
-        case 3:
-        day = "Wednesday";
-        break;
-        case 4:
-        day = "Thursday";
-        break;
-        case 5:
-        day = "Friday";
-        break;
-        case 6:
-        day = "Saturday";
-      }
-    }
-    else {
-      switch (dayNow) {
-        case 0:
-        day = "Sunday";
-        break;
-        case 1:
-        day = "Monday";
-        break;
-        case 2:
-        day = "Tuesday";
-        break;
-        case 3:
-        day = "Wednesday";
-        break;
-        case 4:
-        day = "Thursday";
-        break;
-        case 5:
-        day = "Friday";
-        break;
-        case 6:
-        day = "Saturday";
-      }
-    }
-})
+       curentDay = dayNow + 1
+     } else if ((offsetHours + timeWorld) < 1) {
+       curentDay = dayNow - 1
+     } else {
+        curentDay = dayNow
+     }
+     switch (curentDay) {
+       case 0:
+       day = "Sunday";
+       break;
+       case 1:
+       day = "Monday";
+       break;
+       case 2:
+       day = "Tuesday";
+       break;
+       case 3:
+       day = "Wednesday";
+       break;
+       case 4:
+       day = "Thursday";
+       break;
+       case 5:
+       day = "Friday";
+       break;
+       case 6:
+       day = "Saturday";
+     }
+   })
   .then(function(){
     document.querySelector('.movingDivmax1000').style.display = "block";
-    document.querySelector('.spanLat1000').innerHTML = Math.round(imageLat);
-    document.querySelector('.spanLon1000').innerHTML = Math.round(imageLon);
+    document.querySelector('.spanLat1000').innerHTML = imageLat.toFixed(2);
+    document.querySelector('.spanLon1000').innerHTML = imageLon.toFixed(2);
     document.querySelector('.cornerTemp1000').innerHTML = Math.round(wheatherAllWorld) + "C";
     document.querySelector('.cornerTempF1000').innerHTML = Math.round(weatherAllWorldF) + "F";
     document.querySelector('.cornerDay1000').innerHTML = day;
+
+
 
   const nowWorld = new Date();
   const minsWorld = nowWorld.getMinutes();
@@ -342,7 +273,7 @@ function getTimeWorld(){
   else if (curentHourWorld < 0) {
     let previousDay = curentHourWorld + 24
     document.querySelector(".hoursWorld").innerHTML = `${previousDay}`;
-    curentHourWorld = previousDay;
+    curentHour = previousDay;
   }
    else {
      document.querySelector(".hoursWorld").innerHTML = `${curentHourWorld}`;
@@ -352,7 +283,7 @@ function getTimeWorld(){
 });
 }
 
-function imageClick(e) {
+function imageClick(e , i) {
   if(!e.ctrlKey && !zoombool) {
     getWidthHeight();
     positionY = e.pageY - imageOffsetTop ;
@@ -385,12 +316,11 @@ function imageClick(e) {
           document.querySelector(".World-city").innerHTML = `${worldPlace}`;
           countryShortName = '';
           document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-
-          const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF, day, curentHour , curentMin , imageLatRound , imageLonRound , wheatherIconWorld};
+          const placeNameLi = {  worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF, day, curentHour , curentMin , imageLatRound , imageLonRound , wheatherIconWorld};
           savedcities.push(placeNameLi);
           console.log('savedcities',savedcities);
           const savedList = document.querySelector('.list');
-          savedList.innerHTML = savedcities.map(city => {
+          savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
             return `
             <li>
             <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -407,7 +337,7 @@ function imageClick(e) {
           savedcities.push(placeNameLi);
           console.log('savedcities',savedcities);
           const savedList = document.querySelector('.list');
-          savedList.innerHTML = savedcities.map(city => {
+          savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map((city, i) => {
             return `
             <li>
             <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -424,7 +354,7 @@ function imageClick(e) {
           savedcities.push(placeNameLi);
           console.log('savedcities',savedcities);
           const savedList = document.querySelector('.list');
-          savedList.innerHTML = savedcities.map(city => {
+          savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
             return `
             <li>
             <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -432,6 +362,7 @@ function imageClick(e) {
             </li>
             `;
           }).join('');
+          console.log(savedList);
         }
       })
     });
@@ -511,7 +442,7 @@ function zoom (e) {
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
-            savedList.innerHTML = savedcities.map(city => {
+            savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
               return `
               <li>
               <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -528,7 +459,7 @@ function zoom (e) {
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
-            savedList.innerHTML = savedcities.map(city => {
+            savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
               return `
               <li>
               <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -545,7 +476,7 @@ function zoom (e) {
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
-            savedList.innerHTML = savedcities.map(city => {
+            savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
               return `
               <li>
               <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>

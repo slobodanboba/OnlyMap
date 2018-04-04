@@ -43,17 +43,17 @@ let curentHourWorld = 0;
 let imageLatRound = 0;
 let imageLonRound = 0;
 
-function DisplayCurrentTime() {
-        let date = new Date();
-        let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-        let am_pm = date.getHours() >= 12 ? "PM" : "AM";
-        hours = hours < 10 ? "0" + hours : hours;
-        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-        time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
-        let lblTime = document.getElementById("lblTime");
-        lblTime.innerHTML = time;
-    };
+// function DisplayCurrentTime() {
+//         let date = new Date();
+//         let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+//         let am_pm = date.getHours() >= 12 ? "PM" : "AM";
+//         hours = hours < 10 ? "0" + hours : hours;
+//         let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+//         let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+//         time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
+//         let lblTime = document.getElementById("lblTime");
+//         lblTime.innerHTML = time;
+//     };
 
 
 function getWidthHeight() {
@@ -113,16 +113,14 @@ function displayLonLat1000px(e) {
     getWidthHeight();
     fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
     .then(response => response.json())
-    .then(function(cityName) {
+    .then(cityName => {
       worldPlace = cityName.results[0].address_components[1].short_name;
       document.querySelector(".cityCorner1000").innerHTML = `${worldPlace}`;
     })
     fetch(` https://maps.googleapis.com/maps/api/timezone/json?location=${imageLat},${imageLon}&timestamp=1331161200&key=AIzaSyANpHwd0ZvP_2qrvqEEp-5l6NS3LkwxSbY `)
     .then(response => response.json())
-    .then(function(world) {
-      offsetWorld = world.rawOffset;
-    })
-    .then(function(){
+    .then(world => offsetWorld = world.rawOffset)
+    .then(() => {
       const timeGuadalajara = new Date().getHours()
       const dayNow = new Date().getDay()
       const offsetHours = (offsetWorld/3600);
@@ -159,7 +157,7 @@ function displayLonLat1000px(e) {
          day = "Saturday";
        }
     })
-    .then(function(){
+    .then(() => {
     document.querySelector('.movingDivmax1000').style.display = "block";
     positionY = e.pageY - imageOffsetTop;
     positionX = e.pageX - imageOffsetLeft;
@@ -171,7 +169,7 @@ function displayLonLat1000px(e) {
     document.querySelector('.cornerTempF1000').innerHTML = Math.round(weatherAllWorldF) + "F";
     document.querySelector('.cornerDay1000').innerHTML = day;
     const nowWorld = new Date();
-    const minsWorld = nowWorld.getMinutes();
+    const minsWorld = nowWorld.getMinutes() < 10 ? "0" + nowWorld.getMinutes() : nowWorld.getMinutes();
     curentMin = minsWorld;
     const hourWorld = nowWorld.getHours();
     offsetHoursWorld = (offsetWorld / 3600);
@@ -195,7 +193,7 @@ function displayLonLat1000px(e) {
      }
     document.querySelector(".minutesWorld").innerHTML = `M${minsWorld}`;
   });
-  }
+}
 }
 image.addEventListener("click", displayLonLat1000px);
 
@@ -208,17 +206,17 @@ function getTimeWorld(){
   })
   fetch(` https://maps.googleapis.com/maps/api/timezone/json?location=${imageLat},${imageLon}&timestamp=1331161200&key=AIzaSyANpHwd0ZvP_2qrvqEEp-5l6NS3LkwxSbY `)
   .then(response => response.json())
-  .then(function(world) {
+  .then(world => {
     offsetWorld = world.rawOffset;
   })
-  .then(function(){
+  .then(() => {
     const timeWorld = new Date().getHours()
     const dayNow = new Date().getDay()
     const offsetHours = (offsetWorld/3600);
-    console.log("timeWorld",timeWorld , offsetHours);
-    if ((offsetHours + timeWorld) > 23) {
+    console.log("timeWorld",timeWorld , offsetHours, guadalajaraHours);
+    if ((offsetHours + timeWorld + guadalajaraHours + 1) > 23) {
        curentDay = dayNow + 1
-     } else if ((offsetHours + timeWorld) < 1) {
+     } else if ((offsetHours + timeWorld + guadalajaraHours + 1) < 0) {
        curentDay = dayNow - 1
      } else {
         curentDay = dayNow
@@ -246,15 +244,13 @@ function getTimeWorld(){
        day = "Saturday";
      }
    })
-  .then(function(){
+  .then(() => {
     document.querySelector('.movingDivmax1000').style.display = "block";
     document.querySelector('.spanLat1000').innerHTML = imageLat.toFixed(2);
     document.querySelector('.spanLon1000').innerHTML = imageLon.toFixed(2);
     document.querySelector('.cornerTemp1000').innerHTML = Math.round(wheatherAllWorld) + "C";
     document.querySelector('.cornerTempF1000').innerHTML = Math.round(weatherAllWorldF) + "F";
     document.querySelector('.cornerDay1000').innerHTML = day;
-
-
 
   const nowWorld = new Date();
   const minsWorld = nowWorld.getMinutes();
@@ -426,9 +422,7 @@ function zoom (e) {
         document.querySelector(".icon-AllWorld").innerHTML = `<img class="icon-Img-Tokyo" src="./content/${wheatherIconWorld}.png" width="70px" height="70px">`;
         document.querySelector(".day-AllWorld").innerHTML = `${day}`;
       })
-      .then(() => {
-        getTimeWorld();
-      })
+      .then(() => getTimeWorld())
       .then(() => {
         fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
         .then(response => response.json())
@@ -509,4 +503,3 @@ function zoom (e) {
   //   const guadalajaraOffsetHours = (offsetWorld / 3600);
   //   const hourDegreesWorld = (((hourWorld + offsetHoursWorld + guadalajaraOffsetHours) / 12) * 360) + ((minsWorld/60)*30) + 90;
   //   hourHandWorld.style.transform = `rotate(${hourDegreesWorld}deg)`;
-  // }

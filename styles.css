@@ -79,6 +79,7 @@ html {
   background-size: cover;
   border-radius: 15px;
   height: var(--height);
+  margin: 50px;
 }
 .img {
   margin: 0px;
@@ -98,6 +99,8 @@ html {
 .World-clock {
     grid-column: 2/-1;
     grid-row: 1/2;
+    position: relative;
+    top: 30px;
 }
 
 h2 {
@@ -107,6 +110,7 @@ h2 {
   text-shadow: 1px 1px rgba(255,255,255,0.2);
   font-family:'helvetica neue';
 }
+
 select {
   bottom: 7px;
   right: 22%;
@@ -122,6 +126,7 @@ select {
   font-family:'helvetica neue';
   text-align: center;
 }
+
 option {
   bottom: 7px;
   right: 22%;
@@ -155,34 +160,8 @@ input {
   border-radius: 5px;
   font-family:'helvetica neue';
 }
-ul #citySecond {
-  bottom: 7px;
-  right: 22%;
-  padding: 0px;
-  margin: 0px;
-  position: relative;
-  font-size: 30px;
-  text-shadow: 1px 1px rgba(255,255,255,0.4);
-  background: rgba(255, 255, 255, 0.0);
-  border: none;
-  color: rgba(255,255,255,0.9);
-  font-weight: 600;
-  font-family:'helvetica neue';
-  text-align: center;
-}
 
-ul #citySecond li {
-  bottom: 7px;
-  right: 22%;
-  padding: 0px;
-  margin: 0px;
-  position: relative;
-  font-size: 30px;
-  background-color: black;
-  border: none;
-  color: black;
-  text-align: center;
-}
+
 .input-value {
   position: absolute;
   top: 60%;
@@ -423,6 +402,8 @@ ul li input {
 /*Saved List----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .wrapper {
+  position: relative;
+  top: 10px;
   grid-column: 2/3;
   grid-row: 2/3;
   padding: 30px 10px 10px 10px;
@@ -431,7 +412,8 @@ ul li input {
   border-radius: 15px;
   justify-content: center;
   align-items: center;
-  margin: 50px;
+  margin: 60px;
+  height: auto;
 }
 
 h2 {

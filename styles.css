@@ -417,9 +417,7 @@ ul li input {
 }
 
 h2 {
-  grid-column: 2/3;
   text-align: center;
-  margin: 0;
   font-weight: 200;
 }
 
@@ -464,6 +462,7 @@ h2 {
   .world-map {
     grid-row: 1/-1;
     grid-column: 1/-1;
+    margin: 5px;
   }
   .World-clock {
     display: none;

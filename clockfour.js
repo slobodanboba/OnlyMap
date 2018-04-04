@@ -34,38 +34,13 @@ let day = '';
 let image = document.querySelector(".world-map");
 let images = document.querySelectorAll('.img');
 let zoomedpic = document.querySelector('.zoomed');
-const date = new Date();
-const hoursDisplay = date.getHours();
-
-
-console.log(date);
-
-function getDay() {
-  switch (new Date().getDay()) {
-    case 0:
-    day = "Sunday";
-    break;
-    case 1:
-    day = "Monday";
-    break;
-    case 2:
-    day = "Tuesday";
-    break;
-    case 3:
-    day = "Wednesday";
-    break;
-    case 4:
-    day = "Thursday";
-    break;
-    case 5:
-    day = "Friday";
-    break;
-    case 6:
-    day = "Saturday";
-  }
-}
-getDay();
-console.log(day);
+let curentHour = 0;
+let curentMin = 0;
+let offsetHoursWorld = 0;
+let guadalajaraHours = 0;
+let curentHourWorld = 0;
+let imageLatRound = 0;
+let imageLonRound = 0;
 
 
 function getWidthHeight() {
@@ -98,8 +73,8 @@ function displayLonLat(e) {
     imageLon = (positionX/widthDevider - 50) * 3.6;
     document.documentElement.style.setProperty("--pageX", e.pageX + suffix);
     document.documentElement.style.setProperty(`--pageY`, e.pageY + suffix);
-    document.querySelector('.spanLat').innerHTML = Math.round(imageLat);
-    document.querySelector('.spanLon').innerHTML = Math.round(imageLon);
+    document.querySelector('.spanLat').innerHTML = imageLat.toFixed(2);
+    document.querySelector('.spanLon').innerHTML = imageLon.toFixed(2);
   }
 }
 
@@ -119,9 +94,100 @@ image.addEventListener("click", displayLonLat);
 image.addEventListener("mouseover", displayOn);
 image.addEventListener("mouseout", displayOff);
 
+
 function displayLonLat1000px(e) {
   if (!zoombool && window.matchMedia("(max-width: 1000px)").matches) {
     getWidthHeight();
+    fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
+    .then(response => response.json())
+    .then(function(cityName) {
+      worldPlace = cityName.results[0].address_components[1].short_name;
+      document.querySelector(".cityCorner1000").innerHTML = `${worldPlace}`;
+    })
+    fetch(` https://maps.googleapis.com/maps/api/timezone/json?location=${imageLat},${imageLon}&timestamp=1331161200&key=AIzaSyANpHwd0ZvP_2qrvqEEp-5l6NS3LkwxSbY `)
+    .then(response => response.json())
+    .then(function(world) {
+      offsetWorld = world.rawOffset;
+    })
+    .then(function(){
+      const timeWorld = new Date().getHours()
+      const dayNow = new Date().getDay()
+      const offsetHours = (offsetWorld/3600);
+      console.log("timeWorld",timeWorld , offsetHours);
+      if ((offsetHours + timeWorld) > 23) {
+        switch (dayNow + 1) {
+          case 0:
+          day = "Sunday";
+          break;
+          case 1:
+          day = "Monday";
+          break;
+          case 2:
+          day = "Tuesday";
+          break;
+          case 3:
+          day = "Wednesday";
+          break;
+          case 4:
+          day = "Thursday";
+          break;
+          case 5:
+          day = "Friday";
+          break;
+          case 6:
+          day = "Saturday";
+        }
+      }
+      else if ((offsetHours + timeWorld) < 1) {
+        switch (dayNow - 1) {
+          case 0:
+          day = "Sunday";
+          break;
+          case 1:
+          day = "Monday";
+          break;
+          case 2:
+          day = "Tuesday";
+          break;
+          case 3:
+          day = "Wednesday";
+          break;
+          case 4:
+          day = "Thursday";
+          break;
+          case 5:
+          day = "Friday";
+          break;
+          case 6:
+          day = "Saturday";
+        }
+      }
+      else {
+        switch (dayNow) {
+          case 0:
+          day = "Sunday";
+          break;
+          case 1:
+          day = "Monday";
+          break;
+          case 2:
+          day = "Tuesday";
+          break;
+          case 3:
+          day = "Wednesday";
+          break;
+          case 4:
+          day = "Thursday";
+          break;
+          case 5:
+          day = "Friday";
+          break;
+          case 6:
+          day = "Saturday";
+        }
+      }
+  })
+    .then(function(){
     document.querySelector('.movingDivmax1000').style.display = "block";
     positionY = e.pageY - imageOffsetTop;
     positionX = e.pageX - imageOffsetLeft;
@@ -132,16 +198,159 @@ function displayLonLat1000px(e) {
     document.querySelector('.cornerTemp1000').innerHTML = Math.round(wheatherAllWorld) + "C";
     document.querySelector('.cornerTempF1000').innerHTML = Math.round(weatherAllWorldF) + "F";
     document.querySelector('.cornerDay1000').innerHTML = day;
-    fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
-    .then(response => response.json())
-    .then(function(cityName) {
-      worldPlace = cityName.results[0].address_components[1].short_name;
-      document.querySelector(".cityCorner1000").innerHTML = `${worldPlace}`;
-    })
+    const nowWorld = new Date();
+    const minsWorld = nowWorld.getMinutes();
+    curentMin = minsWorld;
+    const hourWorld = nowWorld.getHours();
+    offsetHoursWorld = (offsetWorld / 3600);
+    const d = new Date();
+    const guadalajaraOffsetHours = d.getTimezoneOffset();
+    guadalajaraHours = (guadalajaraOffsetHours / 60);
+    curentHourWorld = (hourWorld + offsetHoursWorld + guadalajaraHours + 1);
+    if (curentHourWorld >= 24) {
+       let nextDay = curentHourWorld - 24
+       document.querySelector(".hoursWorld").innerHTML = `H${nextDay}`;
+       curentHour = nextDay;
+    }
+    else if (curentHourWorld < 0) {
+      let previousDay = curentHourWorld + 24
+      document.querySelector(".hoursWorld").innerHTML = `H${previousDay}`;
+      curentHourWorld = previousDay;
+    }
+     else {
+       document.querySelector(".hoursWorld").innerHTML = `H${curentHourWorld}`;
+       curentHour = curentHourWorld;
+     }
+    document.querySelector(".minutesWorld").innerHTML = `M${minsWorld}`;
+  });
   }
 }
-
 image.addEventListener("click", displayLonLat1000px);
+
+function getTimeWorld(){
+  fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
+  .then(response => response.json())
+  .then(function(cityName) {
+    worldPlace = cityName.results[0].address_components[1].short_name;
+    document.querySelector(".cityCorner1000").innerHTML = `${worldPlace}`;
+  })
+  fetch(` https://maps.googleapis.com/maps/api/timezone/json?location=${imageLat},${imageLon}&timestamp=1331161200&key=AIzaSyANpHwd0ZvP_2qrvqEEp-5l6NS3LkwxSbY `)
+  .then(response => response.json())
+  .then(function(world) {
+    offsetWorld = world.rawOffset;
+  })
+  .then(function(){
+    const timeWorld = new Date().getHours()
+    const dayNow = new Date().getDay()
+    const offsetHours = (offsetWorld/3600);
+    console.log("timeWorld",timeWorld , offsetHours);
+    if ((offsetHours + timeWorld) > 23) {
+      switch (dayNow + 1) {
+        case 0:
+        day = "Sunday";
+        break;
+        case 1:
+        day = "Monday";
+        break;
+        case 2:
+        day = "Tuesday";
+        break;
+        case 3:
+        day = "Wednesday";
+        break;
+        case 4:
+        day = "Thursday";
+        break;
+        case 5:
+        day = "Friday";
+        break;
+        case 6:
+        day = "Saturday";
+      }
+    }
+    else if ((offsetHours + timeWorld) < 1) {
+      switch (dayNow - 1) {
+        case 0:
+        day = "Sunday";
+        break;
+        case 1:
+        day = "Monday";
+        break;
+        case 2:
+        day = "Tuesday";
+        break;
+        case 3:
+        day = "Wednesday";
+        break;
+        case 4:
+        day = "Thursday";
+        break;
+        case 5:
+        day = "Friday";
+        break;
+        case 6:
+        day = "Saturday";
+      }
+    }
+    else {
+      switch (dayNow) {
+        case 0:
+        day = "Sunday";
+        break;
+        case 1:
+        day = "Monday";
+        break;
+        case 2:
+        day = "Tuesday";
+        break;
+        case 3:
+        day = "Wednesday";
+        break;
+        case 4:
+        day = "Thursday";
+        break;
+        case 5:
+        day = "Friday";
+        break;
+        case 6:
+        day = "Saturday";
+      }
+    }
+})
+  .then(function(){
+    document.querySelector('.movingDivmax1000').style.display = "block";
+    document.querySelector('.spanLat1000').innerHTML = Math.round(imageLat);
+    document.querySelector('.spanLon1000').innerHTML = Math.round(imageLon);
+    document.querySelector('.cornerTemp1000').innerHTML = Math.round(wheatherAllWorld) + "C";
+    document.querySelector('.cornerTempF1000').innerHTML = Math.round(weatherAllWorldF) + "F";
+    document.querySelector('.cornerDay1000').innerHTML = day;
+
+  const nowWorld = new Date();
+  const minsWorld = nowWorld.getMinutes();
+  curentMin = minsWorld;
+  const hourWorld = nowWorld.getHours();
+  offsetHoursWorld = (offsetWorld / 3600);
+  const d = new Date();
+  const guadalajaraOffsetHours = d.getTimezoneOffset();
+  guadalajaraHours = (guadalajaraOffsetHours / 60);
+  curentHourWorld = (hourWorld + offsetHoursWorld + guadalajaraHours + 1);
+  if (curentHourWorld >= 24) {
+     let nextDay = curentHourWorld - 24
+     document.querySelector(".hoursWorld").innerHTML = `${nextDay}`;
+     curentHour = nextDay;
+  }
+  else if (curentHourWorld < 0) {
+    let previousDay = curentHourWorld + 24
+    document.querySelector(".hoursWorld").innerHTML = `${previousDay}`;
+    curentHourWorld = previousDay;
+  }
+   else {
+     document.querySelector(".hoursWorld").innerHTML = `${curentHourWorld}`;
+     curentHour = curentHourWorld;
+   }
+  document.querySelector(".minutesWorld").innerHTML = `:${minsWorld}h`;
+});
+}
 
 function imageClick(e) {
   if(!e.ctrlKey && !zoombool) {
@@ -150,6 +359,8 @@ function imageClick(e) {
     positionX = e.pageX - imageOffsetLeft ;
     imageLat = (50 - positionY/heightDevider) * 1.8;
     imageLon = (positionX/widthDevider - 50) * 3.6;
+    imageLatRound = imageLat.toFixed(2);
+    imageLonRound = imageLon.toFixed(2);
     console.log(imageLat , imageLon);
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${imageLat}&lon=${imageLon}&units=metric&APPID=261e313010ab3d43b1344ab9eba64cfa`)
     .then(response => response.json())
@@ -162,7 +373,10 @@ function imageClick(e) {
       document.querySelector(".icon-AllWorld").innerHTML = `<img class="icon-Img-Tokyo" src="./content/${wheatherIconWorld}.png" width="70px" height="70px">`;
       document.querySelector(".day-AllWorld").innerHTML = `${day}`;
     })
-    .then(function() {
+    .then(() => {
+      getTimeWorld();
+    })
+    .then(() => {
       fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
       .then(response => response.json())
       .then(function(cityName , i) {
@@ -171,30 +385,33 @@ function imageClick(e) {
           document.querySelector(".World-city").innerHTML = `${worldPlace}`;
           countryShortName = '';
           document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-          const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF };
+
+          const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF, day, curentHour , curentMin , imageLatRound , imageLonRound , wheatherIconWorld};
           savedcities.push(placeNameLi);
           console.log('savedcities',savedcities);
           const savedList = document.querySelector('.list');
           savedList.innerHTML = savedcities.map(city => {
             return `
             <li>
-            <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} ${Math.round(city.wheatherAllWorld)}C| ${Math.round(city.weatherAllWorldF)}F</span>
+            <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
+            <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
             </li>
             `;
           }).join('');
         } else if (cityName.results[0].address_components[3] == undefined)  {
           worldPlace = cityName.results[0].address_components[1].short_name ;
           document.querySelector(".World-city").innerHTML = `${worldPlace}`;
-          countryShortName = 'NaN';
+          countryShortName = '';
           document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-          const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF };
+          const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin ,  imageLatRound , imageLonRound , wheatherIconWorld};
           savedcities.push(placeNameLi);
           console.log('savedcities',savedcities);
           const savedList = document.querySelector('.list');
           savedList.innerHTML = savedcities.map(city => {
             return `
             <li>
-            <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} ${Math.round(city.wheatherAllWorld)}C| ${Math.round(city.weatherAllWorldF)}F</span>
+            <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
+            <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
             </li>
             `;
           }).join('');
@@ -203,53 +420,24 @@ function imageClick(e) {
           document.querySelector(".World-city").innerHTML = `${worldPlace}` ;
           countryShortName = cityName.results[0].address_components[3].short_name;
           document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-          const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF };
+          const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin,  imageLatRound , imageLonRound , wheatherIconWorld};
           savedcities.push(placeNameLi);
           console.log('savedcities',savedcities);
           const savedList = document.querySelector('.list');
           savedList.innerHTML = savedcities.map(city => {
             return `
             <li>
-            <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} ${Math.round(city.wheatherAllWorld)}C| ${Math.round(city.weatherAllWorldF)}F</span>
+            <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
+            <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
             </li>
             `;
           }).join('');
         }
-      });
+      })
     });
   }
 }
 image.addEventListener("click", imageClick);
-
-function getTimeWorld(){
-  fetch(` https://maps.googleapis.com/maps/api/timezone/json?location=${imageLat},${imageLon}&timestamp=1331161200&key=AIzaSyANpHwd0ZvP_2qrvqEEp-5l6NS3LkwxSbY `)
-  .then(response => response.json())
-  .then(function(world) {
-    offsetWorld = world.rawOffset;
-  });
-}
-getTimeWorld();
-
-const secondHandWorld = document.querySelector('.second-handWorld');
-const minsHandWorld = document.querySelector('.min-handWorld');
-const hourHandWorld = document.querySelector('.hour-handWorld');
-function setDateWorld() {
-  const nowWorld = new Date();
-  const secondsWorld = nowWorld.getSeconds();
-  const secondsDegreesWorld = ((secondsWorld / 60) * 360) + 90;
-  secondHandWorld.style.transform = `rotate(${secondsDegreesWorld}deg)`;
-  const minsWorld = nowWorld.getMinutes();
-  const minsDegreesWorld = ((minsWorld / 60) * 360) + ((secondsWorld / 60)*6) + 90;
-  minsHandWorld.style.transform = `rotate(${minsDegreesWorld}deg)`;
-  const hourWorld = nowWorld.getHours();
-  const offsetHoursWorld = (offsetWorld / 3600);
-  const guadalajaraOffsetHours = (offsetWorld / 3600);
-  const hourDegreesWorld = (((hourWorld + offsetHoursWorld + guadalajaraOffsetHours) / 12) * 360) + ((minsWorld/60)*30) + 90;
-  hourHandWorld.style.transform = `rotate(${hourDegreesWorld}deg)`;
-}
-setInterval(setDateWorld, 1000);
-setDateWorld();
-image.addEventListener("click", getTimeWorld);
 
 function zoom (e) {
   if(e.ctrlKey || e.shiftKey) {
@@ -264,7 +452,6 @@ function zoom (e) {
   }};
   images.forEach(option => option.addEventListener('click', zoom));
 
-
   function displayZoomed(e) {
     if(zoombool) {
       getWidthHeight();
@@ -274,13 +461,16 @@ function zoom (e) {
       imageLonZoom = ((positionXZoom/widthDevider) * 0.36 - (-minlon));
       document.documentElement.style.setProperty("--pageX", e.pageX + suffix);
       document.documentElement.style.setProperty(`--pageY`, e.pageY + suffix);
-      document.querySelector('.spanLat').innerHTML = Math.round(imageLatZoom);
-      document.querySelector('.spanLon').innerHTML = Math.round(imageLonZoom);
-      imageLat = imageLatZoom;
-      imageLon = imageLonZoom;
+      document.querySelector('.spanLat').innerHTML = imageLatZoom.toFixed(2);
+      document.querySelector('.spanLon').innerHTML = imageLonZoom.toFixed(2);
+      imageLat = imageLatZoom.toFixed(2);
+      imageLon = imageLonZoom.toFixed(2);
+      imageLatRound = imageLatZoom.toFixed(2);
+      imageLonRound = imageLonZoom.toFixed(2);
     }
   }
   zoomedpic.addEventListener('mousemove', displayZoomed);
+
   function zoomout(e) {
     if(e.ctrlKey || e.shiftKey) {
       getWidthHeight();
@@ -293,10 +483,8 @@ function zoom (e) {
   function zoomedAddToList(e) {
     console.log(e.type);
     if (!e.ctrlKey && zoombool) {
-      console.log(e);
       getWidthHeight();
-      getTimeWorld();
-      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${imageLatZoom}&lon=${imageLonZoom}&units=metric&APPID=261e313010ab3d43b1344ab9eba64cfa`)
+      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${imageLat}&lon=${imageLon}&units=metric&APPID=261e313010ab3d43b1344ab9eba64cfa`)
       .then(response => response.json())
       .then(function(data) {
         wheatherAllWorld = data.main.temp ;
@@ -305,9 +493,13 @@ function zoom (e) {
         document.querySelector(".tempF-AllWorld").innerHTML = `${Math.round(weatherAllWorldF)}`;
         wheatherIconWorld = data.weather[0].icon;
         document.querySelector(".icon-AllWorld").innerHTML = `<img class="icon-Img-Tokyo" src="./content/${wheatherIconWorld}.png" width="70px" height="70px">`;
+        document.querySelector(".day-AllWorld").innerHTML = `${day}`;
       })
-      .then(function() {
-        fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLatZoom},${imageLonZoom}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
+      .then(() => {
+        getTimeWorld();
+      })
+      .then(() => {
+        fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
         .then(response => response.json())
         .then(function(cityName , i) {
           if (cityName.results[0] == undefined || cityName.results[0].address_components[1] == undefined) {
@@ -315,14 +507,15 @@ function zoom (e) {
             document.querySelector(".World-city").innerHTML = `${worldPlace}`;
             countryShortName = '';
             document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF };
+            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF, day, curentHour , curentMin , imageLatRound , imageLonRound , wheatherIconWorld};
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
             savedList.innerHTML = savedcities.map(city => {
               return `
               <li>
-              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} ${Math.round(city.wheatherAllWorld)}C| ${Math.round(city.weatherAllWorldF)}F</span>
+              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
+              <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
               </li>
               `;
             }).join('');
@@ -331,14 +524,15 @@ function zoom (e) {
             document.querySelector(".World-city").innerHTML = `${worldPlace}`;
             countryShortName = '';
             document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF };
+            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin ,  imageLatRound , imageLonRound , wheatherIconWorld};
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
             savedList.innerHTML = savedcities.map(city => {
               return `
               <li>
-              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} ${Math.round(city.wheatherAllWorld)}C| ${Math.round(city.weatherAllWorldF)}F</span>
+              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
+              <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
               </li>
               `;
             }).join('');
@@ -347,21 +541,41 @@ function zoom (e) {
             document.querySelector(".World-city").innerHTML = `${worldPlace}` ;
             countryShortName = cityName.results[0].address_components[3].short_name;
             document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF };
+            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin,  imageLatRound , imageLonRound , wheatherIconWorld};
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
             savedList.innerHTML = savedcities.map(city => {
               return `
               <li>
-              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} ${Math.round(city.wheatherAllWorld)}C| ${Math.round(city.weatherAllWorldF)}F</span>
+              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
+              <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
               </li>
               `;
             }).join('');
           }
-        });
+        })
       });
     }
   }
-
   zoomedpic.addEventListener("click", zoomedAddToList);
+
+
+
+  // const secondHandWorld = document.querySelector('.second-handWorld');
+  // const minsHandWorld = document.querySelector('.min-handWorld');
+  // const hourHandWorld = document.querySelector('.hour-handWorld');
+  // function setDateWorld() {
+  //   const nowWorld = new Date();
+  //   const secondsWorld = nowWorld.getSeconds();
+  //   const secondsDegreesWorld = ((secondsWorld / 60) * 360) + 90;
+  //   secondHandWorld.style.transform = `rotate(${secondsDegreesWorld}deg)`;
+  //   const minsWorld = nowWorld.getMinutes();
+  //   const minsDegreesWorld = ((minsWorld / 60) * 360) + ((secondsWorld / 60)*6) + 90;
+  //   minsHandWorld.style.transform = `rotate(${minsDegreesWorld}deg)`;
+  //   const hourWorld = nowWorld.getHours();
+  //   const offsetHoursWorld = (offsetWorld / 3600);
+  //   const guadalajaraOffsetHours = (offsetWorld / 3600);
+  //   const hourDegreesWorld = (((hourWorld + offsetHoursWorld + guadalajaraOffsetHours) / 12) * 360) + ((minsWorld/60)*30) + 90;
+  //   hourHandWorld.style.transform = `rotate(${hourDegreesWorld}deg)`;
+  // }

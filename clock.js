@@ -60,19 +60,19 @@ function getLatLon(e) {
 
 function displayLonLat(e) {
   if(!zoombool) {
-    const { heightDevider, widthDevider } = getWidthHeight();
-    const {imageLat, imageLon, imageLatRound, imageLonRound} = getLatLon(e);
+    getWidthHeight();
+    const {imageLatRound, imageLonRound} = getLatLon(e);
     document.documentElement.style.setProperty("--pageX", e.pageX + suffix);
     document.documentElement.style.setProperty(`--pageY`, e.pageY + suffix);
-    document.querySelector('.spanLat').innerHTML = imageLat.toFixed(2);
-    document.querySelector('.spanLon').innerHTML = imageLon.toFixed(2);
+    document.querySelector('.spanLat').innerHTML = imageLatRound;
+    document.querySelector('.spanLon').innerHTML = imageLonRound;
   }
 }
 
 function displayZoomed(e) {
   if(zoombool) {
-    const { heightDevider, widthDevider } = getWidthHeight();
-    const {imageLat, imageLon, imageLatRound, imageLonRound} = getLatLonZoom(e);
+    getWidthHeight();
+    const {imageLatRound, imageLonRound} = getLatLonZoom(e);
     document.documentElement.style.setProperty("--pageX", e.pageX + suffix);
     document.documentElement.style.setProperty(`--pageY`, e.pageY + suffix);
     document.querySelector('.spanLat').innerHTML = imageLatRound;
@@ -107,7 +107,7 @@ function zoom (e) {
     maxlat = (90 - (maxRow  * 18));
     maxColumn = (e.target.id%10);
     minlon = maxColumn * 36 - 180;
-    zoombool = true;;
+    zoombool = true;
   }};
   images.forEach(option => option.addEventListener('click', zoom));
 
@@ -208,9 +208,9 @@ function zoom (e) {
         document.querySelector('.cornerTempF1000').innerHTML = Math.round(weatherAllWorldF) + "F";
         document.querySelector('.cornerDay1000').innerHTML = day;
         const nowWorld = new Date();
-        const minsWorld = nowWorld.getMinutes();
+        const minsWorld = nowWorld.getMinutes() < 10 ? "0" + nowWorld.getMinutes() : nowWorld.getMinutes();
         curentMin = minsWorld;
-        const hourWorld = nowWorld.getHours();
+        let hourWorld = nowWorld.getHours();
         offsetHoursWorld = (offsetWorld / 3600);
         const d = new Date();
         const guadalajaraOffsetHours = d.getTimezoneOffset();
@@ -235,7 +235,7 @@ function zoom (e) {
       .then(() => {
         fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
         .then(response => response.json())
-        .then(function(cityName , i) {
+        .then((cityName , i) => {
           if (cityName.results[0] == undefined || cityName.results[0].address_components[1] == undefined) {
             worldPlace = 'MISSING PLACE NAME';
             document.querySelector(".World-city").innerHTML = `${worldPlace}`;

@@ -216,6 +216,7 @@ function zoom (e) {
         const guadalajaraOffsetHours = d.getTimezoneOffset();
         guadalajaraHours = (guadalajaraOffsetHours / 60);
         curentHourWorld = Math.floor(hourWorld + offsetHoursWorld + guadalajaraHours + 1);
+        curentHourWorld = curentHourWorld < 10 ? "0" + curentHourWorld : curentHourWorld;
         if (curentHourWorld >= 24) {
           let nextDay = curentHourWorld - 24
           document.querySelector(".hoursWorld").innerHTML = `${nextDay}`;

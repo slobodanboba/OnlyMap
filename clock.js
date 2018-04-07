@@ -27,6 +27,7 @@ let imageLat = 0;
 let imageLon = 0;
 let imageLatRound = 0;
 let imageLonRound = 0;
+let index = 0;
 
 function getLatLonZoom(e) {
   if(zoombool) {
@@ -127,6 +128,9 @@ function zoom (e) {
     document.documentElement.style.setProperty("--height", varHeight + suffix);
     let theCSSpropHeight = window.getComputedStyle(image,null).getPropertyValue("height");
     let imageHeight = parseInt(theCSSpropHeight);
+    let listHeight = imageHeight - 200;
+    console.log("listHeight",listHeight);
+    document.documentElement.style.setProperty("--listHeight", listHeight + suffix);
     let heightDevider = imageHeight/100;
     let widthDevider = imageWidth/100;
     return { heightDevider, widthDevider }
@@ -146,18 +150,15 @@ function zoom (e) {
     if(!e.ctrlKey) {
       getLatLon(e);
       getLatLonZoom(e);
-
       fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
       .then(response => response.json())
       .then(cityName => {
         worldPlace = cityName.results[0].address_components[1].short_name;
         document.querySelector(".cityCorner1000").innerHTML = `${worldPlace}`;
       })
-
       fetch(` https://maps.googleapis.com/maps/api/timezone/json?location=${imageLat},${imageLon}&timestamp=1331161200&key=AIzaSyANpHwd0ZvP_2qrvqEEp-5l6NS3LkwxSbY `)
       .then(response => response.json())
       .then(world =>  offsetWorld = world.rawOffset)
-
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${imageLat}&lon=${imageLon}&units=metric&APPID=261e313010ab3d43b1344ab9eba64cfa`)
       .then(response => response.json())
       .then(data => {
@@ -242,11 +243,12 @@ function zoom (e) {
             document.querySelector(".World-city").innerHTML = `${worldPlace}`;
             countryShortName = '';
             document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-            const placeNameLi = {  worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF, day, curentHour , curentMin , imageLatRound , imageLonRound , wheatherIconWorld};
+            const placeNameLi = { index, worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF, day, curentHour , curentMin , imageLatRound , imageLonRound , wheatherIconWorld};
+            index++
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
-            savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
+            savedList.innerHTML = savedcities.sort((a,b) => b.index - a.index).map(city => {
               return `
               <li>
               <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -259,11 +261,12 @@ function zoom (e) {
             document.querySelector(".World-city").innerHTML = `${worldPlace}`;
             countryShortName = '';
             document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin ,  imageLatRound , imageLonRound , wheatherIconWorld};
+            const placeNameLi = {index, worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin ,  imageLatRound , imageLonRound , wheatherIconWorld};
+            index++
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
-            savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map((city, i) => {
+            savedList.innerHTML = savedcities.sort((a,b) => b.index - a.index).map((city, i) => {
               return `
               <li>
               <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -276,11 +279,12 @@ function zoom (e) {
             document.querySelector(".World-city").innerHTML = `${worldPlace}` ;
             countryShortName = cityName.results[0].address_components[3].short_name;
             document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-            const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin,  imageLatRound , imageLonRound , wheatherIconWorld};
+            const placeNameLi = {index, worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin,  imageLatRound , imageLonRound , wheatherIconWorld};
+            index++
             savedcities.push(placeNameLi);
             console.log('savedcities',savedcities);
             const savedList = document.querySelector('.list');
-            savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
+            savedList.innerHTML = savedcities.sort((a,b) => b.index - a.index).map(city => {
               return `
               <li>
               <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
@@ -297,114 +301,3 @@ function zoom (e) {
 
 
   image.addEventListener("click", getAllData);
-
-
-
-
-
-
-
-
-
-  // function zoomedAddToList(e) {
-  //   if (!e.ctrlKey && zoombool) {
-  //     getWidthHeight();
-  //     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${imageLat}&lon=${imageLon}&units=metric&APPID=261e313010ab3d43b1344ab9eba64cfa`)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       wheatherAllWorld = data.main.temp ;
-  //       weatherAllWorldF = (wheatherAllWorld * 1.8)+32;
-  //       wheatherIconWorld = data.weather[0].icon;
-  //     })
-  //     .then(() => getTimeWorld(e))
-  //     .then(() => {
-  //       fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
-  //       .then(response => response.json())
-  //       .then(function(cityName , i) {
-  //         if (cityName.results[0] == undefined || cityName.results[0].address_components[1] == undefined) {
-  //           worldPlace = 'MISSING PLACE NAME';
-  //           document.querySelector(".World-city").innerHTML = `${worldPlace}`;
-  //           countryShortName = '';
-  //           document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-  //           const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF, day, curentHour , curentMin , imageLatRound , imageLonRound , wheatherIconWorld};
-  //           savedcities.push(placeNameLi);
-  //           console.log('savedcities',savedcities);
-  //           const savedList = document.querySelector('.list');
-  //           savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
-  //             return `
-  //             <li>
-  //             <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
-  //             <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
-  //             </li>
-  //             `;
-  //           }).join('');
-  //         } else if (cityName.results[0].address_components[3] == undefined)  {
-  //           worldPlace = cityName.results[0].address_components[1].short_name ;
-  //           document.querySelector(".World-city").innerHTML = `${worldPlace}`;
-  //           countryShortName = '';
-  //           document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-  //           const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin ,  imageLatRound , imageLonRound , wheatherIconWorld};
-  //           savedcities.push(placeNameLi);
-  //           console.log('savedcities',savedcities);
-  //           const savedList = document.querySelector('.list');
-  //           savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
-  //             return `
-  //             <li>
-  //             <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
-  //             <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
-  //             </li>
-  //             `;
-  //           }).join('');
-  //         } else  {
-  //           worldPlace = cityName.results[0].address_components[1].short_name;
-  //           document.querySelector(".World-city").innerHTML = `${worldPlace}` ;
-  //           countryShortName = cityName.results[0].address_components[3].short_name;
-  //           document.querySelector(".World-countrey").innerHTML = `${countryShortName}`;
-  //           const placeNameLi = { worldPlace,  countryShortName , wheatherAllWorld , weatherAllWorldF , day , curentHour , curentMin,  imageLatRound , imageLonRound , wheatherIconWorld};
-  //           savedcities.push(placeNameLi);
-  //           console.log('savedcities',savedcities);
-  //           const savedList = document.querySelector('.list');
-  //           savedList.innerHTML = savedcities.sort((a,b) => a.curentHour - b.curentHour).map(city => {
-  //             return `
-  //             <li>
-  //             <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
-  //             <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
-  //             </li>
-  //             `;
-  //           }).join('');
-  //         }
-  //       })
-  //     });
-  //   }
-  // }
-  // zoomedpic.addEventListener("click", zoomedAddToList);
-
-  // function DisplayCurrentTime() {
-  //         let date = new Date();
-  //         let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-  //         let am_pm = date.getHours() >= 12 ? "PM" : "AM";
-  //         hours = hours < 10 ? "0" + hours : hours;
-  //         let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-  //         let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-  //         time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
-  //         let lblTime = document.getElementById("lblTime");
-  //         lblTime.innerHTML = time;
-  //     };
-
-
-  // const secondHandWorld = document.querySelector('.second-handWorld');
-  // const minsHandWorld = document.querySelector('.min-handWorld');
-  // const hourHandWorld = document.querySelector('.hour-handWorld');
-  // function setDateWorld() {
-  //   const nowWorld = new Date();
-  //   const secondsWorld = nowWorld.getSeconds();
-  //   const secondsDegreesWorld = ((secondsWorld / 60) * 360) + 90;
-  //   secondHandWorld.style.transform = `rotate(${secondsDegreesWorld}deg)`;
-  //   const minsWorld = nowWorld.getMinutes();
-  //   const minsDegreesWorld = ((minsWorld / 60) * 360) + ((secondsWorld / 60)*6) + 90;
-  //   minsHandWorld.style.transform = `rotate(${minsDegreesWorld}deg)`;
-  //   const hourWorld = nowWorld.getHours();
-  //   const offsetHoursWorld = (offsetWorld / 3600);
-  //   const guadalajaraOffsetHours = (offsetWorld / 3600);
-  //   const hourDegreesWorld = (((hourWorld + offsetHoursWorld + guadalajaraOffsetHours) / 12) * 360) + ((minsWorld/60)*30) + 90;
-  //   hourHandWorld.style.transform = `rotate(${hourDegreesWorld}deg)`;

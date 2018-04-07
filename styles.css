@@ -2,6 +2,7 @@
   --pageX: 0;
   --pageY: 0;
   --height: 400px;
+  --listHeight: 200px;
 }
 ::-webkit-scrollbar {
    width: 7px;
@@ -21,11 +22,16 @@ html {
   text-align: center;
   font-size: 10px;
   background:#0F334A ;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   background-size:cover;
   min-height:100vh;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   text-align: center;
 }
 span {
@@ -60,9 +66,12 @@ ul li input {
 .body-container {
   background-repeat:repeat-x;
   background-size: cover;
+  display: -ms-grid;
   display: grid;
-  grid-template-columns: 7fr 3fr;
-  grid-template-rows: 1fr;
+  -ms-grid-columns: 7fr 3fr;
+      grid-template-columns: 7fr 3fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
 }
 .city {
   position: absolute;
@@ -97,10 +106,15 @@ ul li input {
   text-transform: capitalize;
 }
 .world-map {
+  display: -ms-grid;
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  -ms-grid-columns: (1fr)[10];
+      grid-template-columns: repeat(10, 1fr);
+  -ms-grid-rows: (1fr)[10];
+      grid-template-rows: repeat(10, 1fr);
   grid-row: 1/-1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
   grid-column: 1/2;
   background: url("./content/Earthmap.jpg");
   background-size: cover;
@@ -124,6 +138,8 @@ ul li input {
 }
 .World-clock {
     grid-column: 2/-1;
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
     grid-row: 1/2;
     display: none;
 }
@@ -184,14 +200,20 @@ h2 {
 /*Recent List----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .wrapper {
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 1;
   grid-column: 2/3;
   grid-row: 1/-1;
   padding: 10px 10px 10px 10px;
   background: rgba(255,255,255,0.2);
   border:5px solid rgba(255,255,255,0.9);
   border-radius: 15px;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   max-height: var(--height);
   margin: 5px;
 }
@@ -199,10 +221,16 @@ h2 {
 .list {
   overflow-y: auto;
   overflow-x: hidden;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding:  0px 5% 0px 5%;
-  max-height: 78%;
+  padding-bottom: 100px;
+  height: var(--listHeight);
+  max-height: var(--listHeight);
 }
 
 h2 {
@@ -235,7 +263,7 @@ h2 {
     background-size: cover;
     border-radius: 15px;
     height: var(--height);
-    margin 5%;
+    margin: 5%;
   }
   .World-clock {
 
@@ -245,8 +273,10 @@ h2 {
 
 @media only screen and (max-width: 1000px) {
   .body-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
+    -ms-grid-columns: 1fr;
+        grid-template-columns: 1fr;
+    -ms-grid-rows: auto;
+        grid-template-rows: auto;
   }
   .wrapper {
     display: none;

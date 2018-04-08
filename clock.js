@@ -128,7 +128,7 @@ function zoom (e) {
     document.documentElement.style.setProperty("--height", varHeight + suffix);
     let theCSSpropHeight = window.getComputedStyle(image,null).getPropertyValue("height");
     let imageHeight = parseInt(theCSSpropHeight);
-    let listHeight = imageHeight - 200;
+    let listHeight = imageHeight - 100;
     console.log("listHeight",listHeight);
     document.documentElement.style.setProperty("--listHeight", listHeight + suffix);
     let heightDevider = imageHeight/100;
@@ -238,6 +238,7 @@ function zoom (e) {
         fetch(` https://maps.googleapis.com/maps/api/geocode/json?latlng=${imageLat},${imageLon}&key=AIzaSyAhbhZNE6A-Zcg49SMCyO7r_lH4MCDylRc `)
         .then(response => response.json())
         .then((cityName , i) => {
+             console.log('cityName', cityName);
           if (cityName.results[0] == undefined || cityName.results[0].address_components[1] == undefined) {
             worldPlace = 'MISSING PLACE NAME';
             document.querySelector(".World-city").innerHTML = `${worldPlace}`;
@@ -251,8 +252,9 @@ function zoom (e) {
             savedList.innerHTML = savedcities.sort((a,b) => b.index - a.index).map(city => {
               return `
               <li>
-              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
-              <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
+              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName}</span>
+              <span>    ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px">
+              <span class="textAlighnRight"> Lat:${city.imageLatRound} Lon:${city.imageLonRound} </span>
               </li>
               `;
             }).join('');
@@ -269,8 +271,9 @@ function zoom (e) {
             savedList.innerHTML = savedcities.sort((a,b) => b.index - a.index).map((city, i) => {
               return `
               <li>
-              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
-              <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
+              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} </span>
+              <span>  ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px">
+              <span class="textAlighnRight"> Lat:${city.imageLatRound} Lon:${city.imageLonRound} </span>
               </li>
               `;
             }).join('');
@@ -287,8 +290,9 @@ function zoom (e) {
             savedList.innerHTML = savedcities.sort((a,b) => b.index - a.index).map(city => {
               return `
               <li>
-              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName} Lat:${city.imageLatRound} Lon:${city.imageLonRound}</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px"><br>
-              <span>   ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span>
+              <input type="checkbox" data-index=${i} id="item${i}"> <span> ${city.worldPlace} ${city.countryShortName}</span>
+              <span>  ${Math.round(city.wheatherAllWorld)}C|   ${Math.round(city.weatherAllWorldF)}F  ${city.day} ${city.curentHour}:${city.curentMin}h</span><img class="icon-AllWorld" src="./content/${city.wheatherIconWorld}.png" width="70px" height="70px">
+              <span class="textAlighnRight"> Lat:${city.imageLatRound} Lon:${city.imageLonRound} </span>
               </li>
               `;
             }).join('');

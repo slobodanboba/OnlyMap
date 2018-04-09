@@ -2,6 +2,7 @@
   --pageX: 0;
   --pageY: 0;
   --height: 400px;
+  --listHeight: 200px;
 }
 ::-webkit-scrollbar {
    width: 7px;
@@ -21,11 +22,16 @@ html {
   text-align: center;
   font-size: 10px;
   background:#0F334A ;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   background-size:cover;
   min-height:100vh;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   text-align: center;
 }
 span {
@@ -39,11 +45,15 @@ ul li span {
   font-size: 1.7em;
   font-weight: 400;
   line-height: 30px;
+
 }
 ul li {
     border-bottom: 2px solid rgba(0,0,0,0.2);
     text-align: left;
     list-style: none;
+    line-height: 35px;
+    display: inline-block;
+
 }
 ul li input {
   background: rgba(255, 255, 255, 0.2);
@@ -56,13 +66,17 @@ ul li input {
   text-align: left;
   font-weight:200;
   padding-right: 0px;
+
 }
 .body-container {
   background-repeat:repeat-x;
   background-size: cover;
+  display: -ms-grid;
   display: grid;
-  grid-template-columns: 7fr 3fr;
-  grid-template-rows: 1fr;
+  -ms-grid-columns: 7fr 3fr;
+      grid-template-columns: 7fr 3fr;
+  -ms-grid-rows: 1fr;
+      grid-template-rows: 1fr;
 }
 .city {
   position: absolute;
@@ -97,10 +111,15 @@ ul li input {
   text-transform: capitalize;
 }
 .world-map {
+  display: -ms-grid;
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  -ms-grid-columns: (1fr)[10];
+      grid-template-columns: repeat(10, 1fr);
+  -ms-grid-rows: (1fr)[10];
+      grid-template-rows: repeat(10, 1fr);
   grid-row: 1/-1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
   grid-column: 1/2;
   background: url("./content/Earthmap.jpg");
   background-size: cover;
@@ -124,6 +143,8 @@ ul li input {
 }
 .World-clock {
     grid-column: 2/-1;
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
     grid-row: 1/2;
     display: none;
 }
@@ -139,8 +160,8 @@ h2 {
 }
 .icon-AllWorld {
   position: relative;
-  top:50px;
-  margin-top: -50px;
+  top:35px;
+  margin-top: -40px;
 }
 
 .cornerTempF1000 {
@@ -158,20 +179,37 @@ h2 {
   margin: 10px;
 }
 .movingDivmax1000 {
-  width: auto;
+  max-width: 80px;
   height: auto;
   display: none;
   position: fixed;
-  top: 15px;
-  left: 15px;
+  top: 20px;
+  left: 20px;
   background: rgba(0,0,0,0.2);
   padding: 1px;
 }
+.movingDivmax1000 div {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .LonLat{
-  font-size: 12px;
-  text-align: left;
+  font-size:1.5em;
+  text-align: justify;
   padding-top: 4px;
   margin-left: 0px;
+}
+
+.cityCorner1000 {
+   font-size: 1.7em;
+   max-width: 80px;
+   line-height: 20px;
+   overflow-x: hidden;
+   text-rendering: optimizeLegibility;
+}
+
+.hoursWorld {
+  font-size:1.7em;
+  text-align: justify;
 }
 
 
@@ -184,25 +222,40 @@ h2 {
 /*Recent List----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .wrapper {
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 1;
   grid-column: 2/3;
   grid-row: 1/-1;
   padding: 10px 10px 10px 10px;
   background: rgba(255,255,255,0.2);
   border:5px solid rgba(255,255,255,0.9);
   border-radius: 15px;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   max-height: var(--height);
   margin: 5px;
 }
 
 .list {
+    display: flex;
+    flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  justify-content: center;
-  align-items: center;
   padding:  0px 5% 0px 5%;
-  max-height: 78%;
+  height: var(--listHeight);
+  max-height: var(--listHeight);
+  line-height: 30px;
+}
+
+
+.textAlighnRight {
+  float: right;
+  font-size: 1.2;
+  padding-top: 10px;
 }
 
 h2 {
@@ -222,23 +275,17 @@ h2 {
 @media only screen and (max-width: 1500px) {
 
   .body-container {
-
-  }
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr ;
+}
   .wrapper {
-
+    grid-row: 2/-1;
+      -ms-grid-rows: 2/-1;
+    grid-column: 1/-1;
+      -ms-grid-columns: 1/-1;
   }
-  .list {
-
-  }
-  .world-map {
-    background: url("./content/Earthmap.jpg");
-    background-size: cover;
-    border-radius: 15px;
-    height: var(--height);
-    margin 5%;
-  }
-  .World-clock {
-
+  .textAlighnRight {
+    display: none;
   }
 
 }
@@ -246,14 +293,18 @@ h2 {
 @media only screen and (max-width: 1000px) {
   .body-container {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
+    grid-template-rows: 1fr 1fr ;
   }
   .wrapper {
+    grid-row: 2/-1;
+      -ms-grid-rows: 2/-1;
+    grid-column: 1/-1;
+      -ms-grid-columns: 1/-1;
+  }
+  .textAlighnRight {
     display: none;
   }
-  .list {
-    display: none;
-  }
+
   .world-map {
     grid-row: 1/-1;
     grid-column: 1/-1;

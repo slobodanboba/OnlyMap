@@ -272,6 +272,14 @@ h2 {
    font-size: 1.3em;
 }
 
+
+@media only screen and (max-width: 2200px) {
+  .textAlighnRight {
+    display: none;
+  }
+}
+
+
 @media only screen and (max-width: 1500px) {
 
   .body-container {
@@ -285,7 +293,7 @@ h2 {
       -ms-grid-columns: 1/-1;
   }
   .textAlighnRight {
-    display: none;
+    display: block;
   }
 
 }
@@ -302,7 +310,7 @@ h2 {
       -ms-grid-columns: 1/-1;
   }
   .textAlighnRight {
-    display: none;
+    display: block;
   }
 
   .world-map {
